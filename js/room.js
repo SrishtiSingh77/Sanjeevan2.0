@@ -40,22 +40,18 @@ let expandvideoFrame=(e)=>{
   if(child){
     document.getElementById("stream__container").appendChild(child)
   }
-  display.Frame.style.display = "block"
+  displayFrame.style.display = "block"
   displayFrame.appendChild(e.currentTarget)
-  userIdDisplayFrame = e.currentTarget.display
+  userIdDisplayFrame = e.currentTarget.id
 
-  for (let i=0; videoFrames.lenght>i;i++){
+  for (let i=0; videoFrames.length>i;i++){
     if(videoFrames[i].id!=userIdDisplayFrame){
-
-    
-    videoFrames[i].style.height="100px"
-    videoFrames[i].style.width="100px"
+      videoFrames[i].style.height="100px"
+      videoFrames[i].style.width="100px"
+    }
   }
-  
-
-
 }
 
-for (let i=0; videoFrames.lenght>i;i++){
+for (let i=0; videoFrames.length>i;i++){
   videoFrames[i].addEventListener("click",expandvideoFrame)
-}}
+}

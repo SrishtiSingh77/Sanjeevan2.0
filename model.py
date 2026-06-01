@@ -3,8 +3,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import warnings
-import time
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
 # Suppress warnings related to deprecated functions
 warnings.filterwarnings("ignore", category=UserWarning, message="SymbolDatabase.GetPrototype() is deprecated")
@@ -17,6 +16,8 @@ model = model_dict['model']
 
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
 # Dictionary mapping class indices to labels
@@ -33,41 +34,48 @@ labels_dict = {
 async def process_video(websocket: WebSocket):
     print("Accepting WebSocket connection...")
     await websocket.accept()
-    time.sleep(2)
     print("WebSocket connection accepted.")
     
     previous_character = None 
-    cap = cv2.VideoCapture(0)  # Capture video from the default camera
+    consecutive_predictions = []
+    consecutive_threshold = 4  # Filter out single-frame prediction noise
+    no_hand_counter = 0
+    no_hand_threshold = 8      # Reset to 'None' if no hand is detected for 8 frames
 
-    while True:
-        data_aux = []
-        x_ = []
-        y_ = []
+    try:
+        while True:
+            # Receive binary frame from client
+            data = await websocket.receive_bytes()
+            nparr = np.frombuffer(data, np.uint8)
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            
+            if frame is None:
+                continue
 
-        ret, frame = cap.read()  # Read a frame from the camera
-        if not ret:
-            break
+            H, W, _ = frame.shape
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = hands.process(frame_rgb)
 
-        # Resize the frame to make it smaller (200x150)
-        frame = cv2.resize(frame, (250, 200))
+            predicted_character = None
 
-        # Convert the frame to JPEG
-        ret, jpeg = cv2.imencode(".jpg", frame)
-        if not ret:
-            break
+            if results.multi_hand_landmarks:
+                no_hand_counter = 0  # Reset the no-hand counter since a hand is present
+                
+                # Draw hand landmarks on the frame
+                for hand_landmarks in results.multi_hand_landmarks:
+                    mp_drawing.draw_landmarks(
+                        frame, hand_landmarks,
+                        mp_hands.HAND_CONNECTIONS,
+                        mp_drawing_styles.get_default_hand_landmarks_style(),
+                        mp_drawing_styles.get_default_hand_connections_style()
+                    )
 
-        # Convert the JPEG image to bytes and send it to the client
-        frame_bytes = jpeg.tobytes()
-        await websocket.send_bytes(frame_bytes)
+                # Process only the first hand to guarantee exactly 42 features
+                hand_landmarks = results.multi_hand_landmarks[0]
+                data_aux = []
+                x_ = []
+                y_ = []
 
-        # Process the frame for hand gesture recognition
-        H, W, _ = frame.shape
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = hands.process(frame_rgb)
-
-        if results.multi_hand_landmarks:
-            for hand_landmarks in results.multi_hand_landmarks:
-                # Collect hand landmark data for prediction
                 for i in range(len(hand_landmarks.landmark)):
                     x = hand_landmarks.landmark[i].x
                     y = hand_landmarks.landmark[i].y
@@ -80,33 +88,63 @@ async def process_video(websocket: WebSocket):
                     data_aux.append(x - min(x_))
                     data_aux.append(y - min(y_))
 
-            # Define bounding box for hand landmarks
-            x1 = int(min(x_) * W) - 10
-            y1 = int(min(y_) * H) - 10
-            x2 = int(max(x_) * W) + 10
-            y2 = int(max(y_) * H) + 10
+                # Check that features match expected 42
+                if len(data_aux) == 42:
+                    # Make prediction
+                    prediction = model.predict([np.asarray(data_aux)])
+                    raw_prediction = labels_dict[int(prediction[0])]
+                    
+                    # Append prediction to history buffer
+                    consecutive_predictions.append(raw_prediction)
+                    if len(consecutive_predictions) > consecutive_threshold:
+                        consecutive_predictions.pop(0)
+                        
+                    # Confirm prediction only if all items in window are identical
+                    if len(consecutive_predictions) == consecutive_threshold and len(set(consecutive_predictions)) == 1:
+                        predicted_character = raw_prediction
 
-            # Make prediction
-            prediction = model.predict([np.asarray(data_aux)])
-            predicted_character = labels_dict[int(prediction[0])]
+                        # Define bounding box
+                        x1 = int(min(x_) * W) - 10
+                        y1 = int(min(y_) * H) - 10
+                        x2 = int(max(x_) * W) + 10
+                        y2 = int(max(y_) * H) + 10
 
-            if predicted_character != previous_character:
+                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                        text_position = (10, H - 20)
+                        cv2.putText(frame, predicted_character, text_position, cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv2.LINE_AA)
+            else:
+                # No hand detected: increment the counter
+                no_hand_counter += 1
+                if no_hand_counter >= no_hand_threshold:
+                    consecutive_predictions.clear()
+                    predicted_character = "None"
+                    no_hand_counter = 0
+
+            # Convert frame back to JPEG and send it to the client
+            ret, jpeg = cv2.imencode(".jpg", frame)
+            if ret:
+                frame_bytes = jpeg.tobytes()
+                await websocket.send_bytes(frame_bytes)
+
+            # Send predicted character as text if changed
+            if predicted_character and predicted_character != previous_character:
                 print("Predicted Hand Sign:", predicted_character)
+                await websocket.send_text(predicted_character)
                 previous_character = predicted_character
 
-                # Send the predicted character as a plain string
-                await websocket.send_text(predicted_character)
-
-
-        # Send the processed frame bytes to the WebSocket client
-        ret, jpeg = cv2.imencode(".jpg", frame)
-        if ret:
-            frame_bytes = jpeg.tobytes()
-            await websocket.send_bytes(frame_bytes)
+    except WebSocketDisconnect:
+        print("WebSocket disconnected.")
+    except Exception as e:
+        print(f"Error in WebSocket process: {e}")
 
 # WebSocket endpoint for video feed
 @app.websocket("/video-feed")
 async def video_feed(websocket: WebSocket):
     await process_video(websocket)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("model:app", host="127.0.0.1", port=8000, log_level="info")
+
 
 

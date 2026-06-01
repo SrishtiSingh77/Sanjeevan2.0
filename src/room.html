@@ -16,9 +16,9 @@
             <button id="members__button">
                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 18v1h-24v-1h24zm0-6v1h-24v-1h24zm0-6v1h-24v-1h24z" fill="#ede0e0"><path d="M24 19h-24v-1h24v1zm0-6h-24v-1h24v1zm0-6h-24v-1h24v1z"/></svg>
             </button>
-            <a href="./lobby.html"/>
+            <a href="./lobby.html">
                 <h3 id="logo">
-                    <img src="./images/logo.png" alt="Site Logo">
+                    <img src="../assets/logo.jpeg" alt="Site Logo" style="height: 32px; border-radius: 6px;">
                     <span>Sanjeevan</span>
                 </h3>
             </a>
@@ -51,6 +51,22 @@
                     
                 </section> -->
                 <div id="stream__box"></div>
+                
+
+                <!-- Sign Language Interpreter Panel (AI Augmented Dashboard Component) -->
+                <div id="interpreter__box" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; margin: 20px auto; border: 1px solid rgba(148, 59, 250, 0.4); border-radius: 16px; overflow: hidden; background: rgba(18, 16, 35, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 1.5rem; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(148, 59, 250, 0.25); text-align: center;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; background: #00F2FE; border-radius: 50%; box-shadow: 0 0 10px #00F2FE; animation: pulse 1.5s infinite;"></span>
+                        <h4 style="color: #F3F4F6; margin: 0; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">Sign Language Interpreter</h4>
+                    </div>
+                    <div style="position: relative; width: 100%; max-width: 360px; height: 260px; border-radius: 12px; overflow: hidden; background: #05040A; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center;">
+                        <img class="image" style="width: 100%; height: 100%; object-fit: cover;" src="" alt="Live feed overlays will appear here..."/>
+                    </div>
+                    <div style="margin-top: 15px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 12px; width: 100%; max-width: 360px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9CA3AF; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;">Detected hand sign:</span>
+                        <span id="interpreted-text" style="color: #2aca3e; font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 700; text-shadow: 0 0 10px rgba(42, 202, 62, 0.3);">None</span>
+                    </div>
+                </div>
 
                 <div id="streams__container">
                 </div>
@@ -66,24 +82,17 @@
                     </button>
                     <button id="leave-btn" style="background-color:#FF5050;" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 10v-5l8 7-8 7v-5h-8v-4h8zm-16-8v20h14v-2h-12v-16h12v-2h-14z"/></svg>
-                  </button>
+                    </button>
                 </div>
             </section>
 
             <section id="messages__container">
 
                 <div id="messages">
-                   <!-- <div class="message__wrapper">
-                        <div class="message__body__bot">
-                         
-                            <p class="message__text__bot">Welcome to the room, Don't be shy, say hello!</p>
-                        </div>
-                    </div>-->
-
                 </div>
 
                 <form id="message__form">
-                    <input type="text" name="message" placeholder="Send a message...." />
+                    <input id="target-input" type="text" name="message" placeholder="Send a message...." />
                 </form>
 
             </section>
@@ -97,25 +106,74 @@
     const outputElement = document.getElementById("target-input");
     const socket = new WebSocket("ws://localhost:8000/video-feed");
 
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Function to capture the local Agora video element and send the frames to the server
+    function sendFrame() {
+        if (socket.readyState === WebSocket.OPEN) {
+            const uid = sessionStorage.getItem("uid");
+            // Robustly query either fallback native stream or active Agora container streams
+            const localVideo = document.getElementById("fallback-local-video") || document.querySelector(`#user-${uid} video`) || document.querySelector('.video-player video');
+            if (localVideo && localVideo.readyState >= 2) {
+                // Keep dimensions small for super fast local prediction with lower network overhead
+                canvas.width = 320;
+                canvas.height = 240;
+                ctx.drawImage(localVideo, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob((blob) => {
+                    if (blob && socket.readyState === WebSocket.OPEN) {
+                        socket.send(blob);
+                    }
+                }, 'image/jpeg', 0.6);
+            }
+        }
+        // Run ~6.6 times per second (150ms interval) for smooth detection and minimal lag
+        setTimeout(sendFrame, 150);
+    }
+
     // Event listener for WebSocket messages
     socket.addEventListener("message", function (event) {
         if (typeof event.data === "string") {
-            outputElement.value += event.data+" ";
+            const textElement = document.getElementById("interpreted-text");
+            if (textElement) {
+                textElement.innerText = event.data;
+            }
+
+            // Programmatically broadcast this predicted sign as a chat message so everyone can see it!
+            if (typeof displayName !== 'undefined' && event.data && event.data !== "None") {
+                // If RTM channel is connected, send it to other participants
+                if (typeof channel !== 'undefined' && channel) {
+                    try {
+                        channel.sendMessage({
+                            text: JSON.stringify({
+                                'type': 'chat',
+                                'message': `[Sign Language]: ${event.data}`,
+                                'displayName': displayName
+                            })
+                        });
+                    } catch (e) {
+                        console.error("Failed to broadcast sign message:", e);
+                    }
+                }
+                // Add the message to our own local chat screen
+                if (typeof addMessageToDom === 'function') {
+                    addMessageToDom(displayName, `[Sign Language]: ${event.data}`);
+                }
+            }
         } else if (event.data instanceof Blob) {
-    // Handle binary messages
-        var blob = new Blob([event.data], { type: "image/jpeg" });
-
-        // Create an object URL from the blob
-        var url = URL.createObjectURL(blob);
-
-        // Set the source of the image element to the object URL
-        imageElement.src = url;
-    }
-});
+            // Handle binary processed frames from the server
+            var blob = new Blob([event.data], { type: "image/jpeg" });
+            var url = URL.createObjectURL(blob);
+            if (imageElement) {
+                imageElement.src = url;
+            }
+        }
+    });
 
     // Event listener for WebSocket open
     socket.addEventListener("open", function (event) {
       console.log("Connected to WebSocket server");
+      sendFrame(); // Start uploading camera frames once connected
     });
 
     // Event listener for WebSocket close
@@ -128,9 +186,15 @@
       console.error("WebSocket error:", event);
     });
   </script>
+<style>
+    @keyframes pulse {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.15); }
+    }
+</style>
 <script defer type="text/javascript" src="../js/AgoraRTC_N-4.20.2.js"></script>
 <script defer type="text/javascript" src="../js/agorachat.js"></script>
-<!--<script defer type="text/javascript" src="js/agora-rtm-sdk-1.5.1.js"></script>-->
+<script defer type="text/javascript" src="../js/agora-rtm-sdk-1.5.1.js"></script>
 <script defer type="text/javascript" src="../js/room.js"></script>
 <script defer type="text/javascript" src="../js/room_rtm.js"></script>
 <script defer type="text/javascript" src="../js/room_rtc.js"></script>

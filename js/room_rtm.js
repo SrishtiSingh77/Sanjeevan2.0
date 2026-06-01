@@ -42,6 +42,20 @@ let removeMemberFromDom = async (MemberId) => {
 }
 
 let getMembers = async () => {
+    if (!channel) {
+        // Safe standalone local fallback: show 1 participant (self)
+        let total = document.getElementById('members__count')
+        if (total) total.innerText = "1"
+        let membersWrapper = document.getElementById('member__list')
+        if (membersWrapper) {
+            let memberItem = `<div class="member__wrapper" id="member__self__wrapper">
+                                <span class="green__icon"></span>
+                                <p class="member_name">${displayName} (You)</p>
+                            </div>`
+            membersWrapper.insertAdjacentHTML('beforeend', memberItem)
+        }
+        return
+    }
     let members = await channel.getMembers()
     updateMemberTotal(members)
     for (let i = 0; members.length > i; i++){
@@ -75,7 +89,13 @@ let sendMessage = async (e) => {
     e.preventDefault()
 
     let message = e.target.message.value
-    channel.sendMessage({text:JSON.stringify({'type':'chat', 'message':message, 'displayName':displayName})})
+    if (channel) {
+        try {
+            channel.sendMessage({text:JSON.stringify({'type':'chat', 'message':message, 'displayName':displayName})})
+        } catch(err) {
+            console.error("Failed to send RTM channel message:", err);
+        }
+    }
     addMessageToDom(displayName, message)
     e.target.reset()
 }
@@ -118,8 +138,16 @@ let addBotMessageToDom = (botMessage) => {
 }
 
 let leaveChannel = async () => {
-    await channel.leave()
-    await rtmClient.logout()
+    if (channel) {
+        try {
+            await channel.leave()
+        } catch(err) {}
+    }
+    if (rtmClient) {
+        try {
+            await rtmClient.logout()
+        } catch(err) {}
+    }
 }
 
 window.addEventListener('beforeunload', leaveChannel)

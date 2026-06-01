@@ -3,413 +3,592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanjeevan</title>
+    <title>Sanjeevan - Speak with Your Hand, Listen with Your Heart</title>
+    <!-- Modern Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-        *{
-            padding: 0px;
-            margin: 0px;
+        :root {
+            --bg-color: #0A0915;
+            --primary: #943BFA;
+            --primary-glow: rgba(148, 59, 250, 0.4);
+            --accent: #00F2FE;
+            --accent-glow: rgba(0, 242, 254, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-color: #F3F4F6;
+            --text-muted: #9CA3AF;
         }
-#hiddenDiv {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #f1f1f1;
-    padding: 20px;
-   
-    height: 450px;
-    width: 400px;
-    background-color: transparent;
 
-}
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
 
-.close {
-    float: right;
-    cursor: pointer;
-    margin-left:10px;
-    position: absolute;
-    top: -40px;
-    left: 387px;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    border: 5px black solid;
-    font-size: 30px;
-    background-color: gray;
-    text-align: center;
-    z-index: 99;
-}
-.image{
-    height: 500px;
-    width: 500px;
-    object-fit: cover;
-    position: absolute;
-    top: 70px;
-    right: 70px;
-}
-.navbar{
-    height: 40px;
-    width: 60px;
-    font-size: 25px;
-    
-}
-.sanjeevan{
-    position: absolute;
-    top: 10px;
-    left: 30px;
-    height: 50px;
-    width: 350px;
-    
-}
-.about{
-    position: absolute;
-    top: 10px;
-    right: 160px;
-    background-color:rgba(207, 168, 248, 0.877);
-    border-radius: 20px;
-    width: 150px;
-    text-align: center;
-    cursor: pointer;
-}
-#mainDiv{
-    position: absolute;
-    top: 10px;
-    right: 40px;
-    background-color:rgba(207, 168, 248, 0.877);
-    border-radius: 20px;
-    width: 100px;
-    text-align: center;
-    cursor: pointer;
-}
-.heading{
-    position: absolute;
-    top: 250px;
-    left: 100px;
-    height: 50px;
-    width: 500px;
-    font-size: 45px;
-}
-.head3{
-    position: absolute;
-    top: 430px;
-    left: 100px;
-}
-.get-started{
-    position: absolute;
-    top: 470px;
-    left: 100px;
-    height: 40px;
-    background-color:rgba(207, 168, 248, 0.877);
-    border: 2px black solid;
-    border-radius: 40px;
-    padding-top: 7px;
-    text-align: center;
-    width: 180px;
-    font-size: 30px;
-    cursor: pointer;
-}
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
+        /* High-End Cosmic Background Glows */
+        .cosmic-glow-1 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            top: -150px;
+            left: -150px;
+            z-index: -1;
+            filter: blur(40px);
+        }
 
-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  background-position: center;
-  background-size: cover;
-}
+        .cosmic-glow-2 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            bottom: -200px;
+            right: -100px;
+            z-index: -1;
+            filter: blur(50px);
+        }
 
-.form-box {
-  position: absolute;
-  top: -31px;
-  width: 400px;
-  height: 570px;
-  background: transparent;
-  border: 2px solid #121312;
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+        /* Glassmorphic Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            width: 100%;
+            background: rgba(10, 9, 21, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
 
-h2 {
-  font-size: 2em;
-  color: #121312;
-  text-align: center;
-}
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.inputbox {
-  position: relative;
-  margin: 30px 0;
-  width: 310px;
-  border-bottom: 2px solid #121312;
-}
+        .sanjeevan-logo {
+            height: 42px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease;
+        }
 
-.inputbox label {
-  position: absolute;
-  top: 50%;
-  left: 5px;
-  transform: translateY(-50%);
-  color: #121312;
-  font-size: 1em;
-  pointer-events: none;
-  transition: 0.5s;
-}
+        .sanjeevan-logo:hover {
+            transform: scale(1.05);
+        }
 
-input:focus ~ label,
-input:valid ~ label {
-  top: -5px;
-}
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFF 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
 
-.inputbox input {
-  width: 100%;
-  height: 50px;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 1em;
-  padding: 0 35px 0 5px;
-  color: #121312;
-}
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
 
-.inputbox ion-icon {
-  position: absolute;
-  right: 8px;
-  color: #121312;
-  font-size: 1.2em;
-  top: 20px;
-}
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 0.6rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.forget {
-  margin: -15px 0 15px;
-  font-size: 0.9em;
-  color: #121312;
-  display: flex;
-  justify-content: space-between;
-}
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
 
-.forget label input {
-  margin-right: 3px;
-}
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            padding: 8rem 8% 4rem;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-.forget label a {
-  color: #121312;
-  text-decoration: none;
-}
+        .hero-content {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-.forget label a:hover {
-  text-decoration: underline;
-}
+        .badge {
+            align-self: flex-start;
+            background: rgba(148, 59, 250, 0.1);
+            border: 1px solid rgba(148, 59, 250, 0.3);
+            color: #C084FC;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-.buttonres {
-  width: 100%;
-  height: 40px;
-  border-radius: 40px;
-  /* background:white; */
-  background: #121312;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  color: white;
-}
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
 
+        .hero-title span.highlight-purple {
+            background: linear-gradient(135deg, #C084FC 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-#google-login {
-  transition: background-color .3s, box-shadow .3s;
-    
-  padding: 12px 16px 12px 42px;
-  border: none;
-  border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-  
-  color: #757575;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
-  background-color: white;
-  background-repeat: no-repeat;
-  background-position: 12px 11px;
-  
-  &:hover {
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
-  }
-  
-  &:active {
-    background-color: #eeeeee;
-  }
-  
-  &:focus {
-    outline: none;
-    box-shadow: 
-      0 -1px 0 rgba(0, 0, 0, .04),
-      0 2px 4px rgba(0, 0, 0, .25),
-      0 0 0 3px #c8dafc;
-  }
-  
-  &:disabled {
-    filter: grayscale(100%);
-    background-color: #ebebeb;
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-    cursor: not-allowed;
-  }
-}
+        .hero-title span.highlight-cyan {
+            background: linear-gradient(135deg, var(--accent) 0%, #00C6FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
 
-.register {
-  font-size: 0.9em;
-  color: #121312;
-  text-align: center;
-  margin: 25px 0 10px;
-}
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #7C2DDB 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--primary-glow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            align-self: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
 
-.register p a {
-  text-decoration: none;
-  color: #121312;
-  font-weight: 600;
-}
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
 
-.register p a:hover {
-  text-decoration: underline;
-}
+        .btn-primary:hover::before {
+            left: 100%;
+        }
 
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(148, 59, 250, 0.6);
+        }
+
+        .hero-image-container {
+            flex: 0.9;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-img {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--primary-glow);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        /* Glassmorphic Sign-Up Modal Overlay */
+        #hiddenDiv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 4, 10, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #hiddenDiv.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .form-box {
+            background: rgba(18, 16, 35, 0.7);
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 50px var(--primary-glow);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #hiddenDiv.show .form-box {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+
+        .form-box h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #FFF 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .inputbox {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .inputbox input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 2.8rem;
+            outline: none;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .inputbox input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(148, 59, 250, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .inputbox label {
+            position: absolute;
+            left: 2.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .inputbox input:focus ~ label,
+        .inputbox input:valid ~ label {
+            top: -6px;
+            left: 1rem;
+            font-size: 0.75rem;
+            color: #C084FC;
+            background: #121023;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        .inputbox ion-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .inputbox input:focus ~ ion-icon {
+            color: var(--accent);
+        }
+
+        .buttonres {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, #7C2DDB 100%);
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(148, 59, 250, 0.3);
+        }
+
+        .buttonres:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(148, 59, 250, 0.5);
+        }
+
+        #google-login {
+            background: white !important;
+            color: #374151 !important;
+            border: 1px solid #E5E7EB !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        #google-login:hover {
+            background: #F9FAFB !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        #google-login img {
+            height: 18px;
+            width: 18px;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 7rem;
+                gap: 2.5rem;
+            }
+
+            .hero-content {
+                align-items: center;
+            }
+
+            .btn-primary {
+                align-self: center;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-image-container {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .form-box {
+                padding: 1.75rem;
+            }
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="navbar">
+    <div class="cosmic-glow-1"></div>
+    <div class="cosmic-glow-2"></div>
 
-       
-        <img class="sanjeevan" src="./assets/logo.jpeg" alt="" height="100%" width="100%">
-       
-        <div id="mainDiv" onclick="toggleHiddenDiv()">
-            Sign-in
+    <!-- Glassmorphic Header -->
+    <header class="navbar">
+        <div class="logo-container">
+            <img class="sanjeevan-logo" src="./assets/logo.jpeg" alt="Sanjeevan Logo">
+            <span class="logo-text">Sanjeevan</span>
         </div>
-    </div>
+        <div class="nav-buttons">
+            <button class="btn-secondary" onclick="toggleHiddenDiv()">Sign-in</button>
+        </div>
+    </header>
 
-   
-   <h1> <div class="heading">Speak with Your Hand, <br>Listen with Your Heart <br>Communication for All</h1>   </div></h1>
-    <h3 class="head3">Sign with Ease: Connect Beyond Words!</h3>
- 
+    <!-- Hero Content -->
+    <main class="hero">
+        <div class="hero-content">
+            <span class="badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI-Powered Sign Video Call</span>
+            <h1 class="hero-title">
+                Speak with Your <span class="highlight-purple">Hand</span>,<br>
+                Listen with Your <span class="highlight-cyan">Heart</span>
+            </h1>
+            <p class="hero-subtitle">
+                An inclusive real-time video-calling experience bridging the communication gap. Connect effortlessly beyond boundaries with live hand gesture interpretations translated instantly.
+            </p>
+            <button class="btn-primary" onclick="toggleHiddenDiv()">Get Started <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></button>
+        </div>
+        <div class="hero-image-container">
+            <img class="hero-img" src="./assets/loginphoto.png" alt="Communication Demonstration">
+        </div>
+    </main>
 
-   <div class="get-started" onclick="toggleHiddenDiv()">Get-Started</div>
-
-   <img class="image" src="./assets/loginphoto.png" alt="" height="100%" width="100%">
-    
-
-
-
-    <div id="hiddenDiv" style="display:none;">
-        <button onclick="hideHiddenDiv()" class="close">&times;</button>
-    <section>
-      <div class="form-box">
-        <div class="form-value">
-          <form id="myForm" action="./src/lobby.html" method="POST">
+    <!-- Glassmorphic Registration Overlay Modal -->
+    <div id="hiddenDiv">
+        <div class="form-box">
+            <button onclick="hideHiddenDiv()" class="close-btn">&times;</button>
             <h2>Sign-up</h2>
-            <div class="inputbox">
-              <ion-icon name="name-outline"></ion-icon>
-              <input type="text" id="nameForm" required />
-              <label for="nameForm">Name</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="mail-outline"></ion-icon>
-              <input type="email" id="emailForm" name="email" required />
-              <label for="emailForm">Email</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              <input type="password" id="passForm" name="password" required />
-              <label for="passForm">Password</label>
-            </div>
-            <div class="inputbox">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              <input
-                type="password"
-                id="passFormCNF"
-                name="confirmPassword"
-                required/>
-              <label for="passFormCNF">Confirm-Password</label>
-            </div>
-            
-            <button class="buttonres" id="myButton" type="submit">Sign-up</button><br><br>
-          </form>
-             <button class="buttonres" id="google-login" >Sign-up with Google</button>
-             </div>
+            <form id="myForm" action="./src/lobby.html" method="POST">
+                <div class="inputbox">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input type="text" id="nameForm" required autocomplete="off" />
+                    <label for="nameForm">Name</label>
+                </div>
+                <div class="inputbox">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="email" id="emailForm" name="email" required autocomplete="off" />
+                    <label for="emailForm">Email</label>
+                </div>
+                <div class="inputbox">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" id="passForm" name="password" required />
+                    <label for="passForm">Password</label>
+                </div>
+                <div class="inputbox">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" id="passFormCNF" name="confirmPassword" required />
+                    <label for="passFormCNF">Confirm Password</label>
+                </div>
+                
+                <button class="buttonres" id="myButton" type="submit">Sign-up</button>
+            </form>
+            <button class="buttonres" id="google-login">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWPUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQg5IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=" alt="Google">
+                Sign-up with Google
+            </button>
         </div>
-      </div>
-    </section>
-   
     </div>
-      
+
+    <!-- Scripts -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGGWDJhLeqposZnsxh7xgGJtUolrbQSuI",
+            authDomain: "hackfest-33.firebaseapp.com",
+            projectId: "hackfest-33",
+            storageBucket: "hackfest-33.appspot.com",
+            messagingSenderId: "963339281437",
+            appId: "1:963339281437:web:6b6919df4412b60d4052f4",
+            measurementId: "G-D71WJ277VW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        auth.languageCode = 'en';
+
+        const googleLogin = document.getElementById('google-login');
+        googleLogin.addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const credential = GoogleAuthProvider.credentialFromResult(result);
+                    const user = result.user;
+                    sessionStorage.setItem("display_name", user.displayName || user.email);
+                    window.location.href = "./src/lobby.html";
+                }).catch((error) => {
+                    console.error("Google Auth Error:", error);
+                });
+        });
+    </script>
+
+    <script>
+        function toggleHiddenDiv() {
+            const hiddenDiv = document.getElementById("hiddenDiv");
+            hiddenDiv.classList.add("show");
+        }
+
+        function hideHiddenDiv() {
+            const hiddenDiv = document.getElementById("hiddenDiv");
+            hiddenDiv.classList.remove("show");
+        }
+
+        document.getElementById("myForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const name = document.getElementById("nameForm").value;
+            sessionStorage.setItem("display_name", name);
+            window.location.href = "./src/lobby.html";
+        });
+    </script>
 </body>
-    
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
-  import {getAuth, GoogleAuthProvider , signInWithPopup} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-  
-  const firebaseConfig = {
-  apiKey: "AIzaSyBGGWDJhLeqposZnsxh7xgGJtUolrbQSuI",
-  authDomain: "hackfest-33.firebaseapp.com",
-  projectId: "hackfest-33",
-  storageBucket: "hackfest-33.appspot.com",
-  messagingSenderId: "963339281437",
-  appId: "1:963339281437:web:6b6919df4412b60d4052f4",
-  measurementId: "G-D71WJ277VW"
-};
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  auth.languageCode = 'en';
-
-  const googleLogin = document.getElementById('google-login');
-  googleLogin.addEventListener('click', () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-        console.log(user);
-        window.location.href = "./src/lobby.html";
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
-  });
-
-</script>
-
-<script>
-
-    
-function toggleHiddenDiv() {
-    var hiddenDiv = document.getElementById("hiddenDiv");
-    if (hiddenDiv.style.display === "none") {
-        hiddenDiv.style.display = "block";
-    } else {
-        hiddenDiv.style.display = "none";
-    }
-}
-
-function hideHiddenDiv() {
-    document.getElementById("hiddenDiv").style.display = "none";
-}
-
-document.getElementById("myForm").addEventListener("submit", function() {
- // Prevents the default action of the button click event
-  window.location = "./src/lobby.html";
-});
-</script>
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
 </html>

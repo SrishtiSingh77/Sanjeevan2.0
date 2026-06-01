@@ -3,156 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanjeevan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Sanjeevan - Meeting Lobby</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-    .slideshow-container {
-        position: absolute;
-        top: 250px;
-        right: 200px;
-        max-width: 1000px;
-        margin: auto;
-    }
-    
-    .mySlides {
-        display: none;
-    }
+        :root {
+            --bg-color: #0A0915;
+            --primary: #943BFA;
+            --primary-glow: rgba(148, 59, 250, 0.4);
+            --accent: #00F2FE;
+            --accent-glow: rgba(0, 242, 254, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-color: #F3F4F6;
+            --text-muted: #9CA3AF;
+        }
 
-    .slides {
-        width: 300px;
-        height:300px;
-    }
-    .logo{
-    position: absolute;
-    top: 10px;
-    left: 30px;
-    height: 50px;
-    width: 350px;
-    }
-    .head1{
-        height: 10px;
-        width: 600px;
-        position: absolute;
-        top: 220px;
-        left: 80px;
-        font-size: 60px;
-    }
-    .roomidd{
-        position: absolute;
-        top: 400px;
-        left: 88px;
-        text-align:left;
-        height: 30px;
-        width: 150px;
-    }
-    .nameidd{
-        position: absolute;
-        top: 360px;
-        left: 88px;
-        text-align:left;
-        height: 30px;
-        width: 150px;
-    }
-    .buttonmy{
-    position: absolute;
-    top: 400px;
-    left: 275px;
-    height: 35px;
-    width: 125px;
-    background-color:rgba(207, 168, 248, 0.877);
-    cursor: pointer;
-    }
-    .buttonmy:hover{
- /* Reduced glow effect */
-        box-shadow: 0 4px 8px 0 rgba(148, 47, 255, 0.877), 0 17px 50px 0 rgba(148, 47, 255, 0.877);
-    }
-    .tutorial{
-        position: absolute;
-        top: 500px;
-        left: 100px;
-    }
-    .icon1{
-        
-        position: absolute;
-        top: 20px;
-        right: 100px;
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+        }
 
-    }
-    .icon2{
-        
-        position: absolute;
-        top: 20px;
-        right: 50px;
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
 
-    }
+        .cosmic-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        /* Glassmorphic Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            width: 100%;
+            background: rgba(10, 9, 21, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sanjeevan-logo {
+            height: 42px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFF 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .nav-icon {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: #C084FC;
+        }
+
+        /* Main Container: 2-Column Responsive Layout */
+        .lobby-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            justify-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 4rem 5%;
+            gap: 4rem;
+        }
+
+        /* Left Side: Forms */
+        .lobby-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .lobby-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFF 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lobby-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .form-field i {
+            position: absolute;
+            left: 1.2rem;
+            top: 2.7rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .form-field label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-field input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(148, 59, 250, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .button-join {
+            background: linear-gradient(135deg, var(--primary) 0%, #7C2DDB 100%);
+            color: white;
+            border: none;
+            padding: 1.1rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(148, 59, 250, 0.6);
+        }
+
+        .tutorial-link {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .tutorial-link a {
+            color: #C084FC;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .tutorial-link a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        /* Right Side: Slideshow Graphic Container */
+        .slideshow-wrapper {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 460px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .slideshow-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .mySlides {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .mySlides.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 992px) {
+            .lobby-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding-top: 2rem;
+            }
+
+            .lobby-content {
+                max-width: 100%;
+            }
+
+            .slideshow-wrapper {
+                max-width: 380px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lobby-title {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+            .lobby-card {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="logo"><img src="../assets/logo.jpeg" height="100%" width="100%"alt=""></div>
-    <div class="slideshow-container">
-        <div class="mySlides fade">
-            <img class="slides" src="../images/configuration.png" alt="Image 1" height="100%" width="100%">
-        </div>
-        
-        <div class="mySlides fade">
-            <img class="slides" src="../images/programming.png" alt="Image 2"height="100%" width="100%">
-        </div>
-        
-        <div class="mySlides fade">
-            <img class="slides" src="../images/internet.png" alt="Image 3"height="100%" width="100%">
-        </div>
-    </div>
-    
-    <div class="head1">Video calls and meeting <br>&nbsp;&nbsp;&nbsp; for everyone</div>
-    <div class="icon1"><i class="fa-solid fa-gear"></i></div>
-    <div class="icon2"><i class="fa-solid fa-user"></i></div>
-    <main id="room__lobby__container">
-        
-        <div id="form__container">
-             <div id="form__container__header">
-                 <p></p>
-             </div>
+    <div class="cosmic-glow"></div>
 
-             <form id="lobby__form">
- 
-                <div class="form__field__wrapper">
-                    <label></label>
-                    <input class="nameidd" type="text" name="name" required placeholder="Enter your name" />
-                </div>
+    <!-- Glassmorphic Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img class="sanjeevan-logo" src="../assets/logo.jpeg" alt="Sanjeevan Logo">
+            <span class="logo-text">Sanjeevan</span>
+        </div>
+        <div class="nav-icons">
+            <i class="fa-solid fa-gear nav-icon"></i>
+            <i class="fa-solid fa-circle-user nav-icon"></i>
+        </div>
+    </header>
 
-                <div class="form__field__wrapper">
-                   
-                    <input type="text" class="roomidd" name="room"  placeholder="Enter room code" />
-                </div>
+    <!-- Lobby Content -->
+    <main class="lobby-container">
+        <div class="lobby-content">
+            <h1 class="lobby-title">Video calling & interpret for everyone.</h1>
+            
+            <div class="lobby-card">
+                <form id="lobby__form">
+                    <div class="form-field" style="margin-bottom: 1.25rem;">
+                        <label for="displayNameInput">Your Name</label>
+                        <i class="fa-solid fa-user"></i>
+                        <input id="displayNameInput" type="text" name="name" required placeholder="Enter display name" autocomplete="off" />
+                    </div>
 
-                <div class="form__field__wrapper">
-                    <button class="buttonmy" type="submit">Join Meeting
-                        
-                   </button>
+                    <div class="form-field" style="margin-bottom: 1.75rem;">
+                        <label for="roomCodeInput">Room Code</label>
+                        <i class="fa-solid fa-key"></i>
+                        <input id="roomCodeInput" type="text" name="room" placeholder="Enter or generate code" autocomplete="off" />
+                    </div>
+
+                    <button class="button-join" type="submit">
+                        Join Meeting <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </form>
+                <div class="tutorial-link">Click to view tutorial. <a href="#">Watch Tutorial</a></div>
+            </div>
+        </div>
+
+        <!-- Slideshow -->
+        <div class="slideshow-wrapper">
+            <div class="slideshow-container">
+                <div class="mySlides fade active">
+                    <img src="../images/configuration.png" alt="Illustration 1">
                 </div>
-                <div class="tutorial">Click to watch the tutorial <a href="#">Watch Tutorial</a></div>
-           </form>
-       </div>
+                <div class="mySlides fade">
+                    <img src="../images/programming.png" alt="Illustration 2">
+                </div>
+                <div class="mySlides fade">
+                    <img src="../images/internet.png" alt="Illustration 3">
+                </div>
+            </div>
+        </div>
     </main>
-   
- 
 
-</body>
+    <!-- Slideshow Scripts -->
     <script>
-        var slideIndex = 0;
-        showSlides();
-    
+        let slideIndex = 0;
+        const slides = document.getElementsByClassName("mySlides");
+        
         function showSlides() {
-            var i;
-            var slides = document.getElementsByClassName("mySlides");
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";  
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
             }
             slideIndex++;
-            if (slideIndex > slides.length) {slideIndex = 1}    
-            slides[slideIndex-1].style.display = "block";  
+            if (slideIndex > slides.length) { slideIndex = 1; }
+            slides[slideIndex - 1].classList.add("active");
             setTimeout(showSlides, 4000); // Change image every 4 seconds
         }
+        
+        // Let first run start
+        setTimeout(showSlides, 4000);
     </script>
     <script type="text/javascript" src="../js/lobby.js"></script>
+</body>
 </html>
